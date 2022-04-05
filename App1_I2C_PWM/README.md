@@ -1,8 +1,6 @@
-# Hello World Example
+# Application 1 I2C & PWM
 
-Starts a FreeRTOS task to print "Hello World".
-
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+Starts a FreeRTOS task to read the temperature value of a temperature sensor using I2C to communicate.
 
 ## How to use example
 
