@@ -166,9 +166,10 @@ static void i2c_temperature_task(void *arg){
     i2c_master_set_tc74_mode(I2C_MASTER_NUM, SET_NORM_OP_VALUE);
     vTaskDelay(250 / portTICK_RATE_MS);
     i2c_master_read_temp(I2C_MASTER_NUM,&temperature_value);
-    ESP_LOGI(TAG,"Temperature is : %d",temperature_value);
 
-    if (temperature_value >= 30) {
+    if (temperature_value >= 15) {
+        ESP_LOGI(TAG,"Temperature is : %d",temperature_value);
+
         // Set the LEDC peripheral configuration
         example_ledc_init();
         flag = true;
@@ -177,7 +178,7 @@ static void i2c_temperature_task(void *arg){
         // Update duty to apply the new value
         ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LEDC_CHANNEL));
     }else{
-        ESP_LOGI(TAG,"Temperature %d is lower than 30",temperature_value);
+        ESP_LOGI(TAG,"Temperature %d is lower than 27",temperature_value);
         if(flag) {
             ledc_stop(LEDC_MODE, LEDC_CHANNEL, 0);
             flag = false;
@@ -195,8 +196,6 @@ static void i2c_temperature_task(void *arg){
 
 void app_main(void)
 {
-    
-
     // sensor handling task
     xTaskCreate(i2c_temperature_task, "i2c_temperature_task", 1024 * 2, (void *)0, 10, NULL);
 }
