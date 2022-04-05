@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/CMakeFiles/bootloader
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/CMakeFiles/bootloader.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/CMakeFiles/bootloader-complete.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
