@@ -49,6 +49,32 @@ static const char *TAG = "TC74";
 #define LEDC_DUTY               (4095) // Set duty to 50%. ((2 ** 13) - 1) * 50% = 4095
 #define LEDC_FREQUENCY          (5000) // Frequency in Hertz. Set frequency at 5 kHz
 
+
+static void example_ledc_init(void)
+{
+    // Prepare and then apply the LEDC PWM timer configuration
+    ledc_timer_config_t ledc_timer = {
+        .speed_mode       = LEDC_MODE,
+        .timer_num        = LEDC_TIMER,
+        .duty_resolution  = LEDC_DUTY_RES,
+        .freq_hz          = LEDC_FREQUENCY,  // Set output frequency at 5 kHz
+        .clk_cfg          = LEDC_AUTO_CLK
+    };
+    ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
+
+    // Prepare and then apply the LEDC PWM channel configuration
+    ledc_channel_config_t ledc_channel = {
+        .speed_mode     = LEDC_MODE,
+        .channel        = LEDC_CHANNEL,
+        .timer_sel      = LEDC_TIMER,
+        .intr_type      = LEDC_INTR_DISABLE,
+        .gpio_num       = LEDC_OUTPUT_IO,
+        .duty           = 0, // Set duty to 0%
+        .hpoint         = 0
+    };
+    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
+}
+
 esp_err_t i2c_master_init(void)
 {
     int i2c_master_port = I2C_MASTER_NUM;
@@ -129,6 +155,8 @@ static void i2c_temperature_task(void *arg){
   // set normal mode for testing (200uA consuption)
   // i2c_master_set_tc74_mode(I2C_MASTER_NUM, SET_NORM_OP_VALUE);
 
+    bool flag = false;
+
   // periodically read temp values from sensor and set the sensor to power saving mode
   while(1){
 
@@ -139,6 +167,23 @@ static void i2c_temperature_task(void *arg){
     vTaskDelay(250 / portTICK_RATE_MS);
     i2c_master_read_temp(I2C_MASTER_NUM,&temperature_value);
     ESP_LOGI(TAG,"Temperature is : %d",temperature_value);
+
+    if (temperature_value >= 30) {
+        // Set the LEDC peripheral configuration
+        example_ledc_init();
+        flag = true;
+        // Set duty to 50%
+        ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, LEDC_DUTY));
+        // Update duty to apply the new value
+        ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LEDC_CHANNEL));
+    }else{
+        ESP_LOGI(TAG,"Temperature %d is lower than 30",temperature_value);
+        if(flag) {
+            ledc_stop(LEDC_MODE, LEDC_CHANNEL, 0);
+            flag = false;
+        }
+    }
+
     i2c_master_read_tc74_config(I2C_MASTER_NUM,&operation_mode);
     // ESP_LOGI(TAG,"Operation mode is : %d",operation_mode);
     // set standby mode for testing (5uA consuption)
@@ -148,39 +193,9 @@ static void i2c_temperature_task(void *arg){
   }
 }
 
-static void example_ledc_init(void)
-{
-    // Prepare and then apply the LEDC PWM timer configuration
-    ledc_timer_config_t ledc_timer = {
-        .speed_mode       = LEDC_MODE,
-        .timer_num        = LEDC_TIMER,
-        .duty_resolution  = LEDC_DUTY_RES,
-        .freq_hz          = LEDC_FREQUENCY,  // Set output frequency at 5 kHz
-        .clk_cfg          = LEDC_AUTO_CLK
-    };
-    ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
-
-    // Prepare and then apply the LEDC PWM channel configuration
-    ledc_channel_config_t ledc_channel = {
-        .speed_mode     = LEDC_MODE,
-        .channel        = LEDC_CHANNEL,
-        .timer_sel      = LEDC_TIMER,
-        .intr_type      = LEDC_INTR_DISABLE,
-        .gpio_num       = LEDC_OUTPUT_IO,
-        .duty           = 0, // Set duty to 0%
-        .hpoint         = 0
-    };
-    ESP_ERROR_CHECK(ledc_channel_config(&ledc_channel));
-}
-
 void app_main(void)
 {
-    // Set the LEDC peripheral configuration
-    example_ledc_init();
-    // Set duty to 50%
-    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, LEDC_DUTY));
-    // Update duty to apply the new value
-    ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LEDC_CHANNEL));
+    
 
     // sensor handling task
     xTaskCreate(i2c_temperature_task, "i2c_temperature_task", 1024 * 2, (void *)0, 10, NULL);
