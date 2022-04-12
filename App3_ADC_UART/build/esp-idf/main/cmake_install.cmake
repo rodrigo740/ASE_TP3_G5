@@ -1,4 +1,4 @@
-# Install script for directory: C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App3_ADC_UART/main
+# Install script for directory: C:/Espressif/frameworks/esp-idf-v4.4/examples/get-started/ASE_TP3_G5/App3_ADC_UART/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
