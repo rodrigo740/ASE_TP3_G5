@@ -122,6 +122,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/ulp/cmake_install.cmake")
   include("C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/wifi_provisioning/cmake_install.cmake")
   include("C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/main/cmake_install.cmake")
+  include("C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/cmake_install.cmake")
 
 endif()
 

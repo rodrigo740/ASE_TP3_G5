@@ -273,6 +273,8 @@
     "ETH_USE_ESP32_EMAC": true,
     "ETH_USE_OPENETH": false,
     "ETH_USE_SPI_ETHERNET": true,
+    "EXAMPLE_5V_COMMANDS": false,
+    "EXAMPLE_INTR_USED": true,
     "FATFS_CODEPAGE": 437,
     "FATFS_CODEPAGE_437": true,
     "FATFS_CODEPAGE_720": false,

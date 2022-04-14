@@ -670,3 +670,10 @@ C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/main/C
 C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/main/CMakeFiles/rebuild_cache.dir
 C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/main/CMakeFiles/list_install_components.dir
 C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/main/CMakeFiles/install/strip.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/install/strip.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/__idf_eeprom.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/install/local.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/install.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/edit_cache.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/rebuild_cache.dir
+C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/eeprom/CMakeFiles/list_install_components.dir
