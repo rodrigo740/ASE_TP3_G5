@@ -4,19 +4,13 @@
 #include "driver/i2c.h"
 #include "driver/gpio.h"
 #include "driver/ledc.h"
+#include "math.h"
 
 // Defintions
 
 static const char *TAG = "TC74";
 
-#define TC74_SLAVE_ADDR_A0   0x48
-#define TC74_SLAVE_ADDR_A1   0x49
-#define TC74_SLAVE_ADDR_A2   0x4A
-#define TC74_SLAVE_ADDR_A3   0x4B
-#define TC74_SLAVE_ADDR_A4   0x4C
 #define TC74_SLAVE_ADDR_A5   0x4D  /*!< default slave address for TC74 sensor */
-#define TC74_SLAVE_ADDR_A6   0x4E
-#define TC74_SLAVE_ADDR_A6   0x4F
 
 #define READ_TEMP_REGISTER          0x00
 #define READ_WRITE_CONFIG_REGISTER  0x01
@@ -149,13 +143,7 @@ static void i2c_temperature_task(void *arg){
   // signed integer value of 8 bits
   uint8_t operation_mode;
 
-  // set standby mode for testing (5uA consuption)
-  // i2c_master_set_tc74_mode(I2C_MASTER_NUM, SET_STANBY_VALUE);
-
-  // set normal mode for testing (200uA consuption)
-  // i2c_master_set_tc74_mode(I2C_MASTER_NUM, SET_NORM_OP_VALUE);
-
-    bool flag = false;
+  double duty;
 
   // periodically read temp values from sensor and set the sensor to power saving mode
   while(1){
@@ -167,28 +155,29 @@ static void i2c_temperature_task(void *arg){
     vTaskDelay(250 / portTICK_RATE_MS);
     i2c_master_read_temp(I2C_MASTER_NUM,&temperature_value);
 
-    if (temperature_value >= 15) {
-        ESP_LOGI(TAG,"Temperature is : %d",temperature_value);
+   
+    ESP_LOGI(TAG,"Temperature is : %d",temperature_value);
+    duty = temperature_value/125.0;
 
-        // Set the LEDC peripheral configuration
-        example_ledc_init();
-        flag = true;
-        // Set duty to 50%
-        ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, LEDC_DUTY));
-        // Update duty to apply the new value
-        ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LEDC_CHANNEL));
-    }else{
-        ESP_LOGI(TAG,"Temperature %d is lower than 27",temperature_value);
-        if(flag) {
-            ledc_stop(LEDC_MODE, LEDC_CHANNEL, 0);
-            flag = false;
-        }
-    }
+    ESP_LOGI(TAG, "Current duty cycle is: %f in percentage", duty);
+
+    duty = (pow(2, LEDC_DUTY_RES) - 1) * duty;
+
+    ESP_LOGI(TAG, "Current duty cycle is: %f", duty);
 
     i2c_master_read_tc74_config(I2C_MASTER_NUM,&operation_mode);
     // ESP_LOGI(TAG,"Operation mode is : %d",operation_mode);
     // set standby mode for testing (5uA consuption)
     i2c_master_set_tc74_mode(I2C_MASTER_NUM, SET_STANBY_VALUE);
+
+    // Set the LEDC peripheral configuration
+    example_ledc_init();
+    // Set duty to 50%
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LEDC_CHANNEL, (int) duty));
+    // Update duty to apply the new value
+    ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LEDC_CHANNEL));
+
+    
 
     vTaskDelay(8000 / portTICK_RATE_MS);
   }

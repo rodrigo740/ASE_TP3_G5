@@ -54,6 +54,9 @@ void app_main(void)
     
     eeprom_handle_t eeprom_handle;
 
+    dac_output_enable(DAC_CHANNEL_1);
+    dac_output_enable(DAC_CHANNEL_2);
+
     ESP_LOGI(TAG, "Initializing device...");
     ret = spi_eeprom_init(&eeprom_config, &eeprom_handle);
     ESP_ERROR_CHECK(ret);
@@ -64,6 +67,8 @@ void app_main(void)
     const char test_str[] = "Hello World!";
     ESP_LOGI(TAG, "Write: %s", test_str);
     for (int i = 0; i < sizeof(test_str); i++) {
+
+        dac_output_voltage(DAC_CHANNEL_1, 200);
         // No need for this EEPROM to erase before write.
         ret = spi_eeprom_write(eeprom_handle, i, test_str[i]);
         ESP_ERROR_CHECK(ret);
@@ -71,6 +76,8 @@ void app_main(void)
 
     uint8_t test_buf[32] = "";
     for (int i = 0; i < sizeof(test_str); i++) {
+        
+        dac_output_voltage(DAC_CHANNEL_2, 200);
         ret = spi_eeprom_read(eeprom_handle, i, &test_buf[i]);
         ESP_ERROR_CHECK(ret);
     }
@@ -78,11 +85,10 @@ void app_main(void)
 
     ESP_LOGI(TAG, "Example finished.");
 
-    dac_output_enable(DAC_CHANNEL_1);
+    
 
     while (1) {
         
-        dac_output_voltage(DAC_CHANNEL_1, 200);
         // Add your main loop handling code here.
         vTaskDelay(1);
 
