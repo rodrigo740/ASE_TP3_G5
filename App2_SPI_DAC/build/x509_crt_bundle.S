@@ -1,4 +1,4 @@
-/* * Data converted from C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from C:/Espressif/frameworks/esp-idf-v4.4/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

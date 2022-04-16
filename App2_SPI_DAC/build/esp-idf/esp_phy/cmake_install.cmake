@@ -1,4 +1,4 @@
-# Install script for directory: C:/esp/esp-idf/components/esp_phy
+# Install script for directory: C:/Espressif/frameworks/esp-idf-v4.4/components/esp_phy
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

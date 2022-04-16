@@ -1,4 +1,4 @@
-# Install script for directory: C:/esp/esp-idf/components/bootloader
+# Install script for directory: C:/Espressif/frameworks/esp-idf-v4.4/components/bootloader
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
