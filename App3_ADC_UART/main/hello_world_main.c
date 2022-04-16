@@ -27,6 +27,7 @@ static const adc_unit_t unit = ADC_UNIT_2;
 
 uint32_t adc_reading = 0;
 uint32_t voltage;
+static QueueHandle_t uart2_queue;
 
 
 void init(void) {
@@ -38,10 +39,67 @@ void init(void) {
         .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
         .source_clk = UART_SCLK_APB,
     };
-    uart_driver_install(UART_NUM_2, BUF_SIZE * 2, 0, 0, NULL, 0);
+    uart_driver_install(UART_NUM_2, BUF_SIZE * 2, 0, 20, &uart2_queue, 0);
     uart_param_config(UART_NUM_2, &uart_config);
     uart_set_pin(UART_NUM_2, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 }
+
+static void uart_event_task(void *pvParameters){
+    static const char *EVENT_TAG = "EVENT_TASK";
+    esp_log_level_set(EVENT_TAG, ESP_LOG_INFO);
+    uart_event_t event;
+    size_t buffered_size;
+    uint8_t* dtmp = (uint8_t*) malloc(BUF_SIZE);
+    for(;;) {
+        
+        if(xQueueReceive(uart2_queue, (void * )&event, (TickType_t)portMAX_DELAY)) {
+            bzero(dtmp, BUF_SIZE);
+            ESP_LOGI(EVENT_TAG, "uart[%d] event:", UART_NUM_2);
+            switch(event.type) {
+                //Event of UART receving data
+                case UART_DATA:
+                    ESP_LOGI(EVENT_TAG, "[UART DATA]: %d", event.size);
+                    uart_read_bytes(UART_NUM_2, dtmp, event.size, portMAX_DELAY);
+                    ESP_LOGI(EVENT_TAG, "[DATA EVT]:");
+                    uart_write_bytes(UART_NUM_2, (const char*) dtmp, event.size);
+                    break;
+                
+                case UART_FIFO_OVF:
+                    ESP_LOGI(EVENT_TAG, "hw fifo overflow");
+                    uart_flush_input(UART_NUM_2);
+                    xQueueReset(uart2_queue);
+                    break;
+                
+                case UART_BUFFER_FULL:
+                    ESP_LOGI(EVENT_TAG, "ring buffer full");
+                    uart_flush_input(UART_NUM_2);
+                    xQueueReset(uart2_queue);
+                    break;
+                
+                case UART_BREAK:
+                    ESP_LOGI(EVENT_TAG, "uart rx break");
+                    break;
+                
+                case UART_PARITY_ERR:
+                    ESP_LOGI(EVENT_TAG, "uart parity error");
+                    break;
+                
+                case UART_FRAME_ERR:
+                    ESP_LOGI(EVENT_TAG, "uart frame error");
+                    break;
+            
+                default:
+                    ESP_LOGI(EVENT_TAG, "uart event type: %d", event.type);
+                    break;
+            }
+        }
+    }
+    free(dtmp);
+    dtmp = NULL;
+    vTaskDelete(NULL);
+}
+
+
 
 static void tx_task(void *arg){
     static const char *TX_TASK_TAG = "TX_TASK";
@@ -75,7 +133,6 @@ static void adc_task(void *arg){
     adc_chars = calloc(1, sizeof(esp_adc_cal_characteristics_t));
     esp_adc_cal_characterize(unit, atten, width, DEFAULT_VREF, adc_chars);
     while(1){
-        //uint32_t adc_reading = 0;
         for (int i = 0; i < NO_OF_SAMPLES; i++) {
             int raw;
             adc2_get_raw((adc2_channel_t)channel, width, &raw);
@@ -83,7 +140,6 @@ static void adc_task(void *arg){
         }
         adc_reading /= NO_OF_SAMPLES;
         voltage = esp_adc_cal_raw_to_voltage(adc_reading, adc_chars);
-        //printf("Raw: %d\tVoltage: %dmV\n", adc_reading, voltage);
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
@@ -92,6 +148,7 @@ static void adc_task(void *arg){
 
 void app_main(void){
     init();
+    xTaskCreate(uart_event_task, "uart_event_task", 2048, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(adc_task, "adc2_task", 1024*2, NULL, configMAX_PRIORITIES, NULL);
     xTaskCreate(rx_task, "uart_rx_task", 1024*2, NULL, configMAX_PRIORITIES-1, NULL);
     xTaskCreate(tx_task, "uart_tx_task", 1024*2, NULL, configMAX_PRIORITIES-2, NULL);
