@@ -1,0 +1,1 @@
+This application writes "hello world" in a eeprom memory using SPI master slave format. When the application is writing a vlue in memory it turns a led on and when its reading a value it turns another led on.
