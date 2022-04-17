@@ -1,0 +1,1 @@
+This application reads the analog value provided to a GPIO using and ADC and writes that value in the TX of the UART and is received by the RX of the same UART.
