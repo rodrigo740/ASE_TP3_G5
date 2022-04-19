@@ -1,0 +1,1 @@
+This application reads the value of the temperature sensor, after each time a value read the temperature sensor is put on standby mode. A led is also used with pwm, the duty cycle of this led depends on value from the temperature sensor.
