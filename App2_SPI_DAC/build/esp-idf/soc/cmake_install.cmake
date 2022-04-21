@@ -1,4 +1,4 @@
-# Install script for directory: C:/Espressif/frameworks/esp-idf-v4.4/components/soc
+# Install script for directory: C:/esp/esp-idf/components/soc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Espressif/frameworks/esp-idf-v4.4/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/soc/esp32/cmake_install.cmake")
+  include("C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/build/esp-idf/soc/esp32/cmake_install.cmake")
 
 endif()
 

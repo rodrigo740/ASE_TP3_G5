@@ -1,4 +1,4 @@
-# Install script for directory: C:/Espressif/frameworks/esp-idf-v4.4/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/components/eeprom
+# Install script for directory: C:/esp/esp-idf/examples/get-started/ASE_TP3_G5/App2_SPI_DAC/components/eeprom
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
