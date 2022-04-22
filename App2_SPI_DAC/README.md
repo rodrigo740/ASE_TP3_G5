@@ -1,20 +1,27 @@
-# Hello World Example
+# Application 2 SPI and DAC
 
-Starts a FreeRTOS task to print "Hello World".
-
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
-
-## How to use example
-
-Follow detailed instructions provided specifically for this example. 
-
-Select the instructions depending on Espressif chip installed on your development board:
-
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+Starts a FreeRTOS task to print Read and Write values to an EEPROM memory using SPI, while turning on 2 LEDs using DAC.
 
 
-## Example folder contents
+# Description
+
+This application writes values from 0x00 to 0x79 in a eeprom memory using SPI. When the application is writing a value in memory it turns a led on and when its dumping the values to the terminal it turns another led on, using DAC for both.
+The voltage of the first led varies with the position in which the program is writing, this means that the voltage will vary from 0 to 3.3v (voltage = ((mem_addr*2)*VDD)/ 255), VDD = 3.3v), the voltage of the second led will always be 2.59v (200*3.3/255 = 2.59v).
+
+
+## GPIO Configuration
+
+Pins configuration:
+
+GPIO_CS		13
+GPIO_MISO	18
+GPIO_MOSI	23
+GPIO_SCLK	19
+
+LED_writing = DAC_CHANNEL_1 -> GPIO 25
+LED_duping = DAC_CHANNEL_2 -> GPIO 26
+
+## Folder contents
 
 The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
 
@@ -32,21 +39,3 @@ Below is short explanation of remaining files in the project folder.
 ├── Makefile                   Makefile used by legacy GNU Make
 └── README.md                  This is the file you are currently reading
 ```
-
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
-
-## Troubleshooting
-
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
