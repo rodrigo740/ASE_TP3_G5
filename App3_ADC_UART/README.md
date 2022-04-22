@@ -1,20 +1,20 @@
-# Hello World Example
+# Application 3 ADC UART
 
-Starts a FreeRTOS task to print "Hello World".
-
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
-
-## How to use example
-
-Follow detailed instructions provided specifically for this example. 
-
-Select the instructions depending on Espressif chip installed on your development board:
-
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+Starts 4 FreeRTOS task that read the analog value provided to a GPIO using an ADC and writes that value in the TX of the UART and is received by the RX of the same UART, the last task is used to detect 7 different types of interrupt events.
 
 
-## Example folder contents
+## GPIO Configuration
+
+Pins configuration:
+
+TXD_PIN GPIO 17
+
+RXD_PIN GPIO 16
+
+ADC GPIO 15
+
+
+## Example Folder contents
 
 The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
 
@@ -32,21 +32,3 @@ Below is short explanation of remaining files in the project folder.
 ├── Makefile                   Makefile used by legacy GNU Make
 └── README.md                  This is the file you are currently reading
 ```
-
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
-
-## Troubleshooting
-
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
