@@ -7,7 +7,23 @@ Starts a FreeRTOS task to read the temperature value of a temperature sensor usi
 This application reads the values of the temperature sensor using I2C, after each time a value read the mode of operation of the temperature sensor is switched to standby mode. A led is also used with pwm, the duty cycle of this led depends on value from the temperature sensor.
 
 duty = temperature_value/125.0; 
+
 duty = (pow(2, LEDC_DUTY_RES) - 1) * duty, LEDC_DUTY_RES = 13;
+
+## GPIO Configuration
+
+Pins configuration:
+
+I2C_MASTER_SCL_IO	GPIO 22
+
+I2C_MASTER_SDA_IO	GPIO 21
+
+GPIO_MOSI	23
+
+GPIO_SCLK	19
+
+
+LED = GPIO 5
 
 
 ## Folder contents
