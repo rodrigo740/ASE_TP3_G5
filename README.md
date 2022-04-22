@@ -34,7 +34,7 @@ This Project uses the default `python http server` and at first the example `hel
 
 ## Repository contents
 
-This repository has 5 subfolders, each one is a ESP IDF Project. Each Project also contains an extensive `README` file that explains the application and the GPIO used, please refer to them for more information about each project.
+This repository has 5 subfolders, each one is a ESP IDF Project. Each Project also contains an extensive `README` file, a `description.txt` and a `status.txt` that explain the application, the GPIO used and the status of the implementation (all of them were testes successfully), please refer to them for more information about each project.
 
 Below is the configuration of the projects (except the OTA project):
 
