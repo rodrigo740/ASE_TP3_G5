@@ -10,7 +10,7 @@ duty = temperature_value/125.0;
 duty = (pow(2, LEDC_DUTY_RES) - 1) * duty, LEDC_DUTY_RES = 13;
 
 
-## Example Folder contents
+## Folder contents
 
 The project **App1_I2C_PWM** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
 
