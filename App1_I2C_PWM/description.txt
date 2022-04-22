@@ -1,1 +1,4 @@
-This application reads the value of the temperature sensor, after each time a value read the temperature sensor is put on standby mode. A led is also used with pwm, the duty cycle of this led depends on value from the temperature sensor.
+This application reads the values of the temperature sensor using I2C, after each time a value read the mode of operation of the temperature sensor is switched to standby mode. A led is also used with pwm, the duty cycle of this led depends on value from the temperature sensor.
+
+duty = temperature_value/125.0; 
+duty = (pow(2, LEDC_DUTY_RES) - 1) * duty, LEDC_DUTY_RES = 13;
