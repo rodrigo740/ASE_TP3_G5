@@ -1,20 +1,18 @@
 # Application 1 I2C & PWM
 
-Starts a FreeRTOS task to read the temperature value of a temperature sensor using I2C to communicate.
+Starts a FreeRTOS task to read the temperature value of a temperature sensor using I2C to communicate and turning on a LED using PWM with duty cycle depending on the temperature value.
 
-## How to use example
+# Description
 
-Follow detailed instructions provided specifically for this example. 
+This application reads the values of the temperature sensor using I2C, after each time a value read the mode of operation of the temperature sensor is switched to standby mode. A led is also used with pwm, the duty cycle of this led depends on value from the temperature sensor.
 
-Select the instructions depending on Espressif chip installed on your development board:
-
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+duty = temperature_value/125.0; 
+duty = (pow(2, LEDC_DUTY_RES) - 1) * duty, LEDC_DUTY_RES = 13;
 
 
-## Example folder contents
+## Example Folder contents
 
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
+The project **App1_I2C_PWM** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
 
 ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both). 
 
@@ -30,21 +28,3 @@ Below is short explanation of remaining files in the project folder.
 ├── Makefile                   Makefile used by legacy GNU Make
 └── README.md                  This is the file you are currently reading
 ```
-
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
-
-## Troubleshooting
-
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
