@@ -1,1 +1,12 @@
-This application writes values from 0x00 to 0x79 in a eeprom memory using SPI master slave format. When the application is writing a vlue in memory it turns a led on and when its dumping the values to the terminal it turns another led on.
+This application writes values from 0x00 to 0x79 in a eeprom memory using SPI. When the application is writing a value in memory it turns a led on and when its dumping the values to the terminal it turns another led on, using DAC for both.
+The voltage of the first led varies with the position in which the program is writing, this means that the voltage will vary from 0 to 3.3v (voltage = ((mem_addr*2)*VDD)/ 255), VDD = 3.3v), the voltage of the second led will always be 2.59v (200*3.3/255 = 2.59v).
+
+Pins configuration:
+
+GPIO_CS		13
+GPIO_MISO	18
+GPIO_MOSI	23
+GPIO_SCLK	19
+
+LED_writing = DAC_CHANNEL_1 -> GPIO 25
+LED_duping = DAC_CHANNEL_2 -> GPIO 26
