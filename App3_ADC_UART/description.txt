@@ -1,1 +1,1 @@
-This application reads the analog value provided to a GPIO using and ADC and writes that value in the TX of the UART and is received by the RX of the same UART.
+This application reads the analog value provided to a GPIO using an ADC and writes that value in the TX of the UART and is received by the RX of the same UART if the difference of the average of the last 5 values and the current value is inferior to 10 the ESP32 is placed in light sleep mode, and is awaken after 2 seconds by a timer. 
