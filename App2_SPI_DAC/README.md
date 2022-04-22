@@ -14,11 +14,16 @@ The voltage of the first led varies with the position in which the program is wr
 Pins configuration:
 
 GPIO_CS		13
+
 GPIO_MISO	18
+
 GPIO_MOSI	23
+
 GPIO_SCLK	19
 
+
 LED_writing = DAC_CHANNEL_1 -> GPIO 25
+
 LED_duping = DAC_CHANNEL_2 -> GPIO 26
 
 ## Folder contents
