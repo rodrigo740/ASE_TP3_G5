@@ -4,6 +4,4 @@ This example is based on `esp_https_ota` component's APIs.
 
 ## Configuration
 
-Refer README.md in the parent directory for setup details.
-
-Example also supports binding to specific interface (either "Ethernet" or "WiFi Station"), which will allow firmware upgrade to happen through specific interface (in case multiple networking interfaces are enabled). Please see more on this through example configuration in `idf.py menuconfig -> Example Configuration -> Support firmware upgrade bind specificied interface->Choose OTA data bind interface`.
+This Project uses the default `python http server` and at first the example `hello world` application is used, but if an update is triggered the `App1 I2C PWM` is downloaded into the ESP32 board. The wifi settings must be changed in order to work in other networks.
