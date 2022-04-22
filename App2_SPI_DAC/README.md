@@ -1,4 +1,4 @@
-# Application 2 SPI and DAC
+# Application 2 SPI & DAC
 
 Starts a FreeRTOS task to print Read and Write values to an EEPROM memory using SPI, while turning on 2 LEDs using DAC.
 
