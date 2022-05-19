@@ -1,5 +1,42 @@
 from random import randint
 import PySimpleGUI as sg
+import threading
+import RPi.GPIO as GPIO
+import time
+from time import sleep
+from temp import readTemp
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+ledpin1 = 12				# PWM pin connected to LED
+ledpin2 = 13				# PWM pin connected to LED
+GPIO.setup(ledpin1,GPIO.OUT)
+GPIO.setup(ledpin2,GPIO.OUT)
+pi_pwm1 = GPIO.PWM(ledpin1,1000)		#create PWM instance with frequency
+pi_pwm2 = GPIO.PWM(ledpin2,1000)		#create PWM instance with frequency
+pi_pwm1.start(0)				        #start PWM of required Duty Cycle
+pi_pwm2.start(0)				        #start PWM of required Duty Cycle
+stopPwm2 = False
+
+def do_pwm1(dutyMax):
+    while True:
+        for duty in range(0,dutyMax,1):
+            pi_pwm1.ChangeDutyCycle(duty) #provide duty cycle in the range 0-100
+            sleep(0.01)
+        sleep(0.5)
+        for duty in range(dutyMax,-1,-1):
+            pi_pwm1.ChangeDutyCycle(duty)
+            sleep(0.01)
+
+def do_pwm2(dutyMax):
+    while True:
+        for duty in range(0,dutyMax,1):
+            pi_pwm2.ChangeDutyCycle(duty) #provide duty cycle in the range 0-100
+            sleep(0.01)
+        sleep(0.5)
+        for duty in range(dutyMax,-1,-1):
+            pi_pwm2.ChangeDutyCycle(duty)
+            sleep(0.01)
 
 def make_window(theme):
     sg.theme(theme)
@@ -14,33 +51,38 @@ def make_window(theme):
     input_layout =  [ 
                 [sg.Text(text='PWM_1 : ',size=(12, 1)), 
                 sg.Text(size=(5,2), text='duty cycle'), 
-                sg.Slider(range=(0,100), size=(13,7), orientation='h', enable_events=True, default_value=50, key='-pwm1-'),],
+                sg.Input(s=(16,1), default_text="0", key='-pwm1-'),
+                sg.Button('Pwm1', enable_events=True)],
                 
                 [sg.Text('PWM_2 : ', size=(12, 1)), 
-                sg.Text(size=(5,2), text='duty cycle'), 
-                sg.Slider(range=(0,100), size=(13,7), orientation='h', enable_events=True, default_value=50, key='-pwm2-'),],
+                sg.Text(size=(5,2), text='duty cycle'),  
+                sg.Input(s=(16,1), default_text="0", key='-pwm2-'),
+                sg.Button('Pwm2', enable_events=True)],
                 
                 [sg.Text(text='Temperature : ',size=(12, 1)),
                 sg.Text(size=(5,2), text='output'),  
-                sg.Input(s=(15,1), default_text="0", readonly=True, key='-Temp-'),
-                sg.Image(data=sg.DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-GIF-IMAGE-')],
-
-                [sg.Text(text='SPI : ',size=(12, 1))], 
-                [sg.Text(text='value',size=(5, 2)),
-                sg.Input(s=(15,1), key='-Wrtval-'),
-                sg.Text(text='address',size=(7, 2)),
-                sg.Input(s=(15,1), key='-Wrtaddr-'),
-                sg.Button('Write', enable_events=True)],
-
-                [sg.Text(text='address', size=(7, 2)),
-                sg.Combo(values= wrt_addrs,size=(7,1), readonly=True, k='-ComboAddrs-'),
-                sg.Button('Read', enable_events=True),
-                sg.Text(text='value',size=(5, 2)),
-                sg.Input(s=(15,1), default_text="0", readonly=True, key='-Readval-')],
+                sg.Input(s=(15,1), default_text="0", readonly=True, key='-Temp-'),],
                 
-                [sg.Button('Start', button_color=('white', 'springgreen4'), key='-Start-'),
-                sg.Button('Stop', button_color=('white', 'firebrick3'), key='-Stop-')]
                 ]
+
+    """
+
+    sg.Image(data=sg.DEFAULT_BASE64_LOADING_GIF, enable_events=True, key='-GIF-IMAGE-')
+    [sg.Text(text='SPI : ',size=(12, 1))], 
+    [sg.Text(text='value',size=(5, 2)),
+    sg.Input(s=(15,1), key='-Wrtval-'),
+    sg.Text(text='address',size=(7, 2)),
+    sg.Input(s=(15,1), key='-Wrtaddr-'),
+    sg.Button('Write', enable_events=True)],
+
+    [sg.Text(text='address', size=(7, 2)),
+    sg.Combo(values= wrt_addrs,size=(7,1), readonly=True, k='-ComboAddrs-'),
+    sg.Button('Read', enable_events=True),
+    sg.Text(text='value',size=(5, 2)),
+    sg.Input(s=(15,1), default_text="0", readonly=True, key='-Readval-')],
+    
+    [sg.Button('Start', button_color=('white', 'springgreen4'), key='-Start-'),
+    sg.Button('Stop', button_color=('white', 'firebrick3'), key='-Stop-')]"""
 
 
 
@@ -62,13 +104,24 @@ def make_window(theme):
 
 def main():
 
+    threadRunning = False
+    pwmThread = None
+
+
     
     window = make_window(sg.theme())
     start = False
-    # This is an Event Loop 
+    #t = threading.Thread(target=readTemp, args=[])
+    #t.start()
+    # This is an Event Loop
+    count = 0
     while True:
         event, values = window.read(timeout=200)
-        window['-GIF-IMAGE-'].update_animation(sg.DEFAULT_BASE64_LOADING_GIF, time_between_frames=100)
+        #window['-GIF-IMAGE-'].update_animation(sg.DEFAULT_BASE64_LOADING_GIF, time_between_frames=100)
+        if count == 5:
+            window['-Temp-'].update(readTemp())
+            count = 0
+        count += 1
         if event not in (sg.TIMEOUT_EVENT, sg.WIN_CLOSED):
             print('============ Event = ', event, ' ==============')
             print('-------- Values Dictionary (key=value) --------')
@@ -91,9 +144,16 @@ def main():
             print("[LOG] User Chose Theme: " + str(theme_chosen))
             window.close()
             window = make_window(theme_chosen)
-        elif event == "pwm1":
+        elif event == "Pwm1":
+            
+            t = threading.Thread(target=do_pwm1, args=[int(values['-pwm1-'])])
+            t.start()
+            print(type(values['-pwm1-']))
             print("pwm1 value = {v}".format(v=values['-pwm1-']))
-        elif event == "pwm2":
+            
+        elif event == "Pwm2":
+            t = threading.Thread(target=do_pwm2, args=[int(values['-pwm2-'])])
+            t.start()
             print("pwm2 value = {v}".format(v=values['-pwm2-']))
         elif event == "Write":
             print('spi: write {v} in addr {a}'.format(v=values['-Wrtval-'], a=values['-Wrtaddr-']) )
@@ -104,9 +164,6 @@ def main():
             start =  True
         elif event == "-Stop-":
             start =  False
-
-        if start:
-            window['-Temp-'].update(randint(18, 33))
 
 
     window.close()
