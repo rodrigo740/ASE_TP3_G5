@@ -8,14 +8,14 @@ from temp import readTemp
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-ledpin1 = 12				# PWM pin connected to LED
-ledpin2 = 13				# PWM pin connected to LED
+ledpin1 = 12				        # PWM pin connected to LED
+ledpin2 = 13				        # PWM pin connected to LED
 GPIO.setup(ledpin1,GPIO.OUT)
 GPIO.setup(ledpin2,GPIO.OUT)
-pi_pwm1 = GPIO.PWM(ledpin1,1000)		#create PWM instance with frequency
-pi_pwm2 = GPIO.PWM(ledpin2,1000)		#create PWM instance with frequency
-pi_pwm1.start(0)				        #start PWM of required Duty Cycle
-pi_pwm2.start(0)				        #start PWM of required Duty Cycle
+pi_pwm1 = GPIO.PWM(ledpin1,1000)	#create PWM instance with frequency
+pi_pwm2 = GPIO.PWM(ledpin2,1000)	#create PWM instance with frequency
+pi_pwm1.start(0)				    #start PWM of required Duty Cycle
+pi_pwm2.start(0)				    #start PWM of required Duty Cycle
 stopPwm2 = False
 
 def do_pwm1(dutyMax):
