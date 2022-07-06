@@ -1,0 +1,16 @@
+ace_spades
+ace_hearts
+ace_diamonds
+ace_clubs
+king_spades
+king_hearts
+king_diamonds
+king_clubs
+queen_spades
+queen_hearts
+queen_diamonds
+queen_clubs
+jack_spades
+jack_hearts
+jack_diamonds
+jack_clubs
